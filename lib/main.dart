@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 void main() {
-  runApp(const WahedApp());
+  runApp(WahedApp());
 }
 
 class WahedApp extends StatelessWidget {
-  const WahedApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
-      home: const MainScreen(),
+      home: MainScreen(),
     );
   }
 }
@@ -33,7 +31,7 @@ class MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    codeController = TextEditingController(text: "// كود واحد عراقي - ببجي\nimport 'package:flutter/material.dart';\nvoid main(){runApp(MaterialApp(home: Scaffold(body: Center(child: Text('ببجي عراق 1247 لاعب')))));}");
+    codeController = TextEditingController(text: "// واحد عراقي IDE - يشتغل عالنت\nimport 'package:flutter/material.dart';\nvoid main(){runApp(MaterialApp(home: Scaffold(body: Center(child: Text('ببجي عراق')))));}");
   }
 
   void openBuild() {
@@ -43,68 +41,53 @@ class MainScreenState extends State<MainScreen> {
   void openTemplates() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF0D1117),
+      backgroundColor: Color(0xFF0D1117),
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("قوالب جاهزة - فول", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 12),
+              Text("قوالب جاهزة", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              SizedBox(height: 12),
               ListTile(
-                leading: const Icon(Icons.menu_book, color: Color(0xFF2EA043)),
-                title: const Text("القرآن الكريم", style: TextStyle(color: Colors.white)),
+                leading: Icon(Icons.menu_book, color: Color(0xFF2EA043)),
+                title: Text("القرآن الكريم", style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.pop(context);
-                  setState(() {
-                    appName = "القرآن الكريم";
-                    codeController.text = "// قرآن 114 سورة";
-                  });
+                  setState(() { appName = "القرآن الكريم"; });
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.self_improvement, color: Color(0xFFD4AF37)),
-                title: const Text("الاذكار", style: TextStyle(color: Colors.white)),
+                leading: Icon(Icons.self_improvement, color: Color(0xFFD4AF37)),
+                title: Text("الاذكار", style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.pop(context);
-                  setState(() {
-                    appName = "الاذكار";
-                    codeController.text = "// اذكار";
-                  });
+                  setState(() { appName = "الاذكار"; });
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.fingerprint, color: Color(0xFF8B5CF6)),
-                title: const Text("التسبيح", style: TextStyle(color: Colors.white)),
+                leading: Icon(Icons.fingerprint, color: Color(0xFF8B5CF6)),
+                title: Text("التسبيح", style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.pop(context);
-                  setState(() {
-                    appName = "التسبيح";
-                    codeController.text = "// تسبيح";
-                  });
+                  setState(() { appName = "التسبيح"; });
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.wifi_find, color: Color(0xFF00D9FF)),
-                title: const Text("ماسح الشبكة", style: TextStyle(color: Colors.white)),
+                leading: Icon(Icons.wifi_find, color: Color(0xFF00D9FF)),
+                title: Text("ماسح الشبكة", style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.pop(context);
-                  setState(() {
-                    appName = "ماسح الشبكة";
-                    codeController.text = "// شبكة";
-                  });
+                  setState(() { appName = "ماسح الشبكة"; });
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.sports_esports, color: Color(0xFFFF4444)),
-                title: const Text("ببجي عراق", style: TextStyle(color: Colors.white)),
+                leading: Icon(Icons.sports_esports, color: Color(0xFFFF4444)),
+                title: Text("ببجي عراق", style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.pop(context);
-                  setState(() {
-                    appName = "ببجي عراق";
-                    codeController.text = "// ببجي";
-                  });
+                  setState(() { appName = "ببجي عراق"; });
                 },
               ),
             ],
@@ -118,33 +101,31 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: const Color(0xFF050505),
+      backgroundColor: Color(0xFF050505),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0D1117),
-        title: Text(appName, style: const TextStyle(color: Colors.white, fontSize: 14)),
+        backgroundColor: Color(0xFF0D1117),
+        title: Text(appName, style: TextStyle(color: Colors.white, fontSize: 14)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              scaffoldKey.currentState?.openEndDrawer();
-            },
+            icon: Icon(Icons.menu),
+            onPressed: () { scaffoldKey.currentState?.openEndDrawer(); },
           ),
         ],
       ),
       endDrawer: Drawer(
-        backgroundColor: const Color(0xFF0D1117),
+        backgroundColor: Color(0xFF0D1117),
         child: Column(
           children: [
-            const SizedBox(height: 50),
-            const Padding(
+            SizedBox(height: 50),
+            Padding(
               padding: EdgeInsets.all(16),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text("هيكل المشروع", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ),
-            const Divider(color: Color(0xFF21262D)),
-            const Expanded(
+            Divider(color: Color(0xFF21262D)),
+            Expanded(
               child: ListView(
                 padding: EdgeInsets.all(8),
                 children: [
@@ -156,25 +137,25 @@ class MainScreenState extends State<MainScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               child: Column(
                 children: [
                   Row(
                     children: [
-                      Expanded(child: btnDrawer("الذكاء الاصطناعي", const Color(0xFF1F6FEB), openTemplates)),
-                      const SizedBox(width: 8),
-                      Expanded(child: btnDrawer("اعدادات المشروع", const Color(0xFF21262D), () {})),
+                      Expanded(child: btnDrawer("الذكاء الاصطناعي", Color(0xFF1F6FEB), openTemplates)),
+                      SizedBox(width: 8),
+                      Expanded(child: btnDrawer("إعدادات المشروع", Color(0xFF21262D), () {})),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Row(
                     children: [
                       Expanded(child: btnAction("بناء APK", Icons.build, openBuild)),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Expanded(child: btnAction("تصدير ZIP", Icons.archive, () {})),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   SizedBox(width: double.infinity, child: btnAction("كل المشاريع", Icons.folder_copy, () {})),
                 ],
               ),
@@ -186,19 +167,19 @@ class MainScreenState extends State<MainScreen> {
         children: [
           Container(
             height: 34,
-            color: const Color(0xFF161B22),
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            color: Color(0xFF161B22),
+            padding: EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: const Color(0xFFD4AF37), borderRadius: BorderRadius.circular(6)),
-                  child: const Text("main.dart", style: TextStyle(color: Colors.black, fontSize: 10)),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(color: Color(0xFFD4AF37), borderRadius: BorderRadius.circular(6)),
+                  child: Text("main.dart", style: TextStyle(color: Colors.black, fontSize: 10)),
                 ),
-                const SizedBox(width: 8),
-                const Text("يشتغل عالنت فقط", style: TextStyle(color: Colors.white38, fontSize: 9)),
-                const Spacer(),
-                const Icon(Icons.wifi, color: Color(0xFF2EA043), size: 14),
+                SizedBox(width: 8),
+                Text("يشتغل عالنت فقط - محمي", style: TextStyle(color: Colors.white38, fontSize: 9)),
+                Spacer(),
+                Icon(Icons.wifi, color: Color(0xFF2EA043), size: 14),
               ],
             ),
           ),
@@ -207,20 +188,20 @@ class MainScreenState extends State<MainScreen> {
               controller: codeController,
               maxLines: null,
               expands: true,
-              style: const TextStyle(color: Color(0xFFC3E88D), fontSize: 12),
-              decoration: const InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
+              style: TextStyle(color: Color(0xFFC3E88D), fontSize: 12),
+              decoration: InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(backgroundColor: const Color(0xFFD4AF37), onPressed: openBuild, child: const Icon(Icons.play_arrow, color: Colors.black)),
+      floatingActionButton: FloatingActionButton(backgroundColor: Color(0xFFD4AF37), onPressed: openBuild, child: Icon(Icons.play_arrow, color: Colors.black)),
     );
   }
 
   Widget btnDrawer(String t, Color bg, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(height: 44, decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)), child: Center(child: Text(t, style: const TextStyle(color: Colors.white, fontSize: 11)))),
+      child: Container(height: 44, decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)), child: Center(child: Text(t, style: TextStyle(color: Colors.white, fontSize: 11)))),
     );
   }
 
@@ -229,8 +210,8 @@ class MainScreenState extends State<MainScreen> {
       onTap: onTap,
       child: Container(
         height: 44,
-        decoration: BoxDecoration(color: const Color(0xFF21262D), borderRadius: BorderRadius.circular(12)),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(ic, size: 14, color: Colors.white70), const SizedBox(width: 6), Text(t, style: const TextStyle(color: Colors.white, fontSize: 11))]),
+        decoration: BoxDecoration(color: Color(0xFF21262D), borderRadius: BorderRadius.circular(12)),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(ic, size: 14, color: Colors.white70), SizedBox(width: 6), Text(t, style: TextStyle(color: Colors.white, fontSize: 11))]),
       ),
     );
   }
@@ -258,7 +239,7 @@ class BuildScreenState extends State<BuildScreen> {
   }
 
   void startBuild() {
-    Timer.periodic(const Duration(milliseconds: 600), (t) {
+    Timer.periodic(Duration(milliseconds: 600), (t) {
       if (current >= steps.length) {
         t.cancel();
         setState(() { done = true; });
@@ -280,34 +261,34 @@ class BuildScreenState extends State<BuildScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setS) {
-            Timer.periodic(const Duration(milliseconds: 20), (tt) {
+            Timer.periodic(Duration(milliseconds: 20), (tt) {
               if (p >= 100) { tt.cancel(); return; }
               setS(() { p++; });
               if (p == 100) {
-                Future.delayed(const Duration(milliseconds: 300), () {
+                Future.delayed(Duration(milliseconds: 300), () {
                   Navigator.pop(context);
                   showInstall();
                 });
               }
             });
             return AlertDialog(
-              backgroundColor: const Color(0xFF161B22),
+              backgroundColor: Color(0xFF161B22),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(width: 60, height: 60, decoration: BoxDecoration(color: const Color(0xFFD4AF37), borderRadius: BorderRadius.circular(14)), child: const Center(child: Text("1", style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold)))),
-                  const SizedBox(height: 12),
-                  Text(widget.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 12),
+                  Container(width: 60, height: 60, decoration: BoxDecoration(color: Color(0xFFD4AF37), borderRadius: BorderRadius.circular(14)), child: Center(child: Text("1", style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold)))),
+                  SizedBox(height: 12),
+                  Text(widget.name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 12),
                   Stack(
                     alignment: Alignment.center,
                     children: [
-                      SizedBox(width: 100, height: 100, child: CircularProgressIndicator(value: p / 100, strokeWidth: 6, color: const Color(0xFFD4AF37))),
-                      Text("$p%", style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                      SizedBox(width: 100, height: 100, child: CircularProgressIndicator(value: p / 100, strokeWidth: 6, color: Color(0xFFD4AF37))),
+                      Text("$p%", style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  LinearProgressIndicator(value: p / 100, color: const Color(0xFFD4AF37)),
+                  SizedBox(height: 10),
+                  LinearProgressIndicator(value: p / 100, color: Color(0xFFD4AF37)),
                 ],
               ),
             );
@@ -323,34 +304,34 @@ class BuildScreenState extends State<BuildScreen> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF161B22),
+          backgroundColor: Color(0xFF161B22),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.check_circle, color: Color(0xFF2EA043), size: 50),
-              const SizedBox(height: 8),
-              const Text("تم البناء 100%", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              Text(widget.name + ".apk جاهز", style: const TextStyle(color: Colors.white70, fontSize: 12)),
-              const SizedBox(height: 12),
+              Icon(Icons.check_circle, color: Color(0xFF2EA043), size: 50),
+              SizedBox(height: 8),
+              Text("تم البناء 100%", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              Text(widget.name + ".apk جاهز", style: TextStyle(color: Colors.white70, fontSize: 12)),
+              SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF238636)),
+                  style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF238636)),
                   onPressed: () {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("تم تثبيت " + widget.name + " في جهازك")));
                   },
-                  icon: const Icon(Icons.phone_android, color: Colors.white),
-                  label: const Text("تثبيت في الجهاز", style: TextStyle(color: Colors.white)),
+                  icon: Icon(Icons.phone_android, color: Colors.white),
+                  label: Text("تثبيت في الجهاز", style: TextStyle(color: Colors.white)),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Row(
                 children: [
-                  Expanded(child: OutlinedButton.icon(onPressed: () { Navigator.pop(context); showWeb(); }, icon: const Icon(Icons.language, size: 14), label: const Text("حمل من الموقع", style: TextStyle(fontSize: 10)))),
-                  const SizedBox(width: 8),
-                  Container(width: 44, height: 44, decoration: BoxDecoration(color: const Color(0xFF21262D), borderRadius: BorderRadius.circular(10)), child: IconButton(icon: const Icon(Icons.download, color: Colors.white), onPressed: () { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("تم حفظ " + widget.name + ".apk"))); })),
+                  Expanded(child: OutlinedButton.icon(onPressed: () { Navigator.pop(context); showWeb(); }, icon: Icon(Icons.language, size: 14), label: Text("حمل من الموقع", style: TextStyle(fontSize: 10)))),
+                  SizedBox(width: 8),
+                  Container(width: 44, height: 44, decoration: BoxDecoration(color: Color(0xFF21262D), borderRadius: BorderRadius.circular(10)), child: IconButton(icon: Icon(Icons.download, color: Colors.white), onPressed: () { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("تم حفظ " + widget.name + ".apk عن طريق السهم"))); })),
                 ],
               ),
             ],
@@ -365,19 +346,19 @@ class BuildScreenState extends State<BuildScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF0D1117),
-          title: const Text("تحميل من الموقع", style: TextStyle(color: Colors.white, fontSize: 14)),
+          backgroundColor: Color(0xFF0D1117),
+          title: Text("تحميل من الموقع", style: TextStyle(color: Colors.white, fontSize: 14)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("اذا ما طلعت الواجهة روح للموقع", style: TextStyle(color: Colors.white70, fontSize: 11)),
-              const SizedBox(height: 8),
-              Text("wahed.iq/download/" + widget.name, style: const TextStyle(color: Color(0xFF58A6FF), fontSize: 12)),
-              Text("wahed.iq/edit/" + widget.name, style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 11)),
+              Text("اذا ما طلعت الواجهة روح للموقع", style: TextStyle(color: Colors.white70, fontSize: 11)),
+              SizedBox(height: 8),
+              Text("wahed.iq/download/" + widget.name, style: TextStyle(color: Color(0xFF58A6FF), fontSize: 12)),
+              Text("wahed.iq/edit/" + widget.name, style: TextStyle(color: Color(0xFFD4AF37), fontSize: 11)),
             ],
           ),
-          actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("حفظ"))],
+          actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text("حفظ"))],
         );
       },
     );
@@ -386,22 +367,22 @@ class BuildScreenState extends State<BuildScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1117),
-      appBar: AppBar(backgroundColor: const Color(0xFF010409), title: Text(done? widget.name + ".apk جاهز" : "بناء GitHub", style: const TextStyle(color: Colors.white, fontSize: 12))),
+      backgroundColor: Color(0xFF0D1117),
+      appBar: AppBar(backgroundColor: Color(0xFF010409), title: Text(done? widget.name + ".apk جاهز ⬇️" : "بناء GitHub", style: TextStyle(color: Colors.white, fontSize: 12))),
       body: Column(
         children: [
-          LinearProgressIndicator(value: current / steps.length, color: const Color(0xFFD4AF37)),
-          Expanded(child: ListView.builder(padding: const EdgeInsets.all(12), itemCount: logs.length, itemBuilder: (context,i) => Text(logs[i], style: const TextStyle(color: Color(0xFF2EA043), fontSize: 11)))),
+          LinearProgressIndicator(value: current / steps.length, color: Color(0xFFD4AF37)),
+          Expanded(child: ListView.builder(padding: EdgeInsets.all(12), itemCount: logs.length, itemBuilder: (context,i) => Text(logs[i], style: TextStyle(color: Color(0xFF2EA043), fontSize: 11)))),
           if (done)
             Container(
-              padding: const EdgeInsets.all(12),
-              color: const Color(0xFF161B22),
+              padding: EdgeInsets.all(12),
+              color: Color(0xFF161B22),
               child: Row(
                 children: [
-                  Expanded(child: ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF238636)), onPressed: showCenter, icon: const Icon(Icons.looks_one), label: const Text("اظهار 1-100%", style: TextStyle(fontSize: 11)))),
-                  const SizedBox(width: 8),
-                  IconButton(style: IconButton.styleFrom(backgroundColor: const Color(0xFF21262D)), onPressed: showWeb, icon: const Icon(Icons.language, color: Color(0xFF58A6FF))),
-                  IconButton(style: IconButton.styleFrom(backgroundColor: const Color(0xFF21262D)), onPressed: () {}, icon: const Icon(Icons.download, color: Colors.white)),
+                  Expanded(child: ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF238636)), onPressed: showCenter, icon: Icon(Icons.looks_one), label: Text("اظهار 1-100%", style: TextStyle(fontSize: 11)))),
+                  SizedBox(width: 8),
+                  IconButton(style: IconButton.styleFrom(backgroundColor: Color(0xFF21262D)), onPressed: showWeb, icon: Icon(Icons.language, color: Color(0xFF58A6FF))),
+                  IconButton(style: IconButton.styleFrom(backgroundColor: Color(0xFF21262D)), onPressed: () {}, icon: Icon(Icons.download, color: Colors.white)),
                 ],
               ),
             ),
