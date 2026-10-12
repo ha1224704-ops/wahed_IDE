@@ -2,194 +2,216 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 void main() => runApp(const WahedApp());
-
 class WahedApp extends StatelessWidget {
   const WahedApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: const Color(0xFF0D1117)),
-      home: const GithubLoginScreen(),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, theme: ThemeData.dark(), home: const ProjectsScreen());
   }
 }
 
-class GithubLoginScreen extends StatefulWidget {
-  const GithubLoginScreen({super.key});
-  @override
-  State<GithubLoginScreen> createState() => _GithubLoginScreenState();
-}
-
-class _GithubLoginScreenState extends State<GithubLoginScreen> {
-  final userCtrl = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0D1117),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Container(width: 90, height: 90, decoration: BoxDecoration(color: const Color(0xFF161B22), borderRadius: BorderRadius.circular(22), border: Border.all(color: const Color(0xFF30363D))), child: const Icon(Icons.code, size: 50, color: Colors.white)),
-            const SizedBox(height: 20),
-            const Text('واحد عراقي', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-            const Text('سجل بـ GitHub', style: TextStyle(color: Color(0xFF8B949E))),
-            const SizedBox(height: 30),
-            TextField(controller: userCtrl, style: const TextStyle(color: Colors.white), decoration: InputDecoration(hintText: 'GitHub username', filled: true, fillColor: const Color(0xFF0D1117), enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color(0xFF30363D)), borderRadius: BorderRadius.circular(12)), focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color(0xFF1F6FEB)), borderRadius: BorderRadius.circular(12)))),
-            const SizedBox(height: 16),
-            SizedBox(width: double.infinity, height: 50, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF238636), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), onPressed: () { if (userCtrl.text.isNotEmpty) { Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProjectsScreen(githubUser: userCtrl.text))); } }, child: const Text('دخول GitHub', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
-          ]),
-        ),
-      ),
-    );
-  }
-}
-
+// شاشة المشاريع + زر الاعدادات الجديد
 class ProjectsScreen extends StatefulWidget {
-  final String githubUser;
-  const ProjectsScreen({super.key, required this.githubUser});
+  const ProjectsScreen({super.key});
   @override
   State<ProjectsScreen> createState() => _ProjectsScreenState();
 }
 
 class _ProjectsScreenState extends State<ProjectsScreen> {
-  List<Map<String, String>> projects = [];
+  List<Map<String,dynamic>> projects = [];
 
-  final Map<String, String> templates = {
-    'القرآن الكريم': "import 'package:flutter/material.dart';\nvoid main()=>runApp(MaterialApp(home: Scaffold(backgroundColor: Color(0xFF0A1A0F), appBar: AppBar(title: Text('القرآن'), backgroundColor: Color(0xFF1A5D1A)), body: ListView(children: [ListTile(title: Text('الفاتحة', style: TextStyle(color: Colors.white)), subtitle: Text('بسم الله الرحمن الرحيم', style: TextStyle(color: Colors.white70))), ListTile(title: Text('البقرة', style: TextStyle(color: Colors.white)))]))));\n",
-    'متجر': "import 'package:flutter/material.dart';\nvoid main()=>runApp(MaterialApp(home: Scaffold(appBar: AppBar(title: Text('متجر واحد')), body: Center(child: Text('منتجات')))));\n",
-  };
-
-  void newProject() {
-    String code = templates['القرآن الكريم']!;
-    String name = "مشروع_${projects.length + 1}";
-    setState(() { projects.add({'name': name, 'code': code}); });
-    Navigator.push(context, MaterialPageRoute(builder: (_) => EditorScreen(projectName: name, code: code, githubUser: widget.githubUser)));
+  void createWithSettings(){
+    Navigator.push(context, MaterialPageRoute(builder: (_) => AppSettingsScreen(onCreate: (settings){
+      setState(()=> projects.add(settings));
+      Navigator.push(context, MaterialPageRoute(builder: (_)=> EditorPage(projectData: settings)));
+    })));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1117),
-      appBar: AppBar(backgroundColor: const Color(0xFF0D1117), title: const Text('Wahed IDE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-      body: Column(children: [
-        Padding(padding: const EdgeInsets.all(12), child: Row(children: [
-          Expanded(child: OutlinedButton(onPressed: () {}, child: const Text('القوالب الجاهزة', style: TextStyle(color: Colors.white)))),
-          const SizedBox(width: 10),
-          Expanded(child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1F6FEB)), onPressed: newProject, child: const Text('+ مشروع جديد', style: TextStyle(color: Colors.white)))),
-        ])),
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: SizedBox(width: double.infinity, child: OutlinedButton(onPressed: () {}, child: const Text('استيراد مشروع من ZIP', style: TextStyle(color: Colors.white))))),
-        const SizedBox(height: 20),
-        Expanded(child: projects.isEmpty? Column(children: [const SizedBox(height: 80), Container(width: 100, height: 100, decoration: BoxDecoration(color: const Color(0xFF161B22), borderRadius: BorderRadius.circular(20)), child: const Icon(Icons.folder_open, color: Color(0xFF8B949E), size: 40)), const SizedBox(height: 12), const Text('لا توجد مشاريع بعد', style: TextStyle(color: Colors.white)), const Text('ابدأ بإنشاء مشروع Flutter الأول', style: TextStyle(color: Color(0xFF8B949E), fontSize: 12)), const SizedBox(height: 12), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1F6FEB)), onPressed: newProject, child: const Text('+ إنشاء مشروع'))]) : ListView.builder(itemCount: projects.length, itemBuilder: (c, i) => ListTile(title: Text(projects[i]['name']!, style: const TextStyle(color: Colors.white)), subtitle: Text(widget.githubUser, style: const TextStyle(color: Color(0xFF8B949E), fontSize: 10)), onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => EditorScreen(projectName: projects[i]['name']!, code: projects[i]['code']!, githubUser: widget.githubUser)))))),
-      ]),
-      bottomNavigationBar: BottomNavigationBar(backgroundColor: const Color(0xFF0D1117), selectedItemColor: const Color(0xFF1F6FEB), unselectedItemColor: const Color(0xFF8B949E), type: BottomNavigationBarType.fixed, items: const [BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'مشاريع'), BottomNavigationBarItem(icon: Icon(Icons.library_books), label: 'المكتبة'), BottomNavigationBarItem(icon: Icon(Icons.smart_toy), label: 'AI'), BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'إعدادات')]),
+      backgroundColor: const Color(0xFF050505),
+      appBar: AppBar(backgroundColor: const Color(0xFF0A0A0A), title: const Text('واحد عراقي PRO', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)), actions: [IconButton(icon: const Icon(Icons.settings, color: Color(0xFFD4AF37)), onPressed: createWithSettings)]),
+      body: projects.isEmpty? Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Container(width: 120, height: 120, decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFFD4AF37), Color(0xFF8B7355)]), borderRadius: BorderRadius.circular(28)), child: const Icon(Icons.videogame_asset, size: 50, color: Colors.black)),
+        const SizedBox(height: 16), const Text('اصنع لعبة مثل ببجي', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)), const Text('ايقونة + اسم + حزمة + حماية', style: TextStyle(color: Colors.white38, fontSize: 11)),
+        const SizedBox(height: 20), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFD4AF37), padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14)), onPressed: createWithSettings, child: const Text('انشاء تطبيق / لعبة +', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))),
+      ])) : ListView.builder(padding: const EdgeInsets.all(12), itemCount: projects.length, itemBuilder: (c,i)=> Container(margin: const EdgeInsets.only(bottom: 12), decoration: BoxDecoration(color: const Color(0xFF121212), borderRadius: BorderRadius.circular(16)), child: ListTile(leading: Container(width: 48, height: 48, decoration: BoxDecoration(color: const Color(0xFFD4AF37), borderRadius: BorderRadius.circular(12)), child: Icon(projects[i]['icon'] as IconData??? Icons.apps, color: Colors.black)), title: Text(projects[i]['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)), subtitle: Text('${projects[i]['package']} v${projects[i]['version']}', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 10)), trailing: projects[i]['protected']? const Icon(Icons.shield, color: Color(0xFF2EA043), size: 18): null, onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=> EditorPage(projectData: projects[i])))))),
+      floatingActionButton: FloatingActionButton.extended(backgroundColor: const Color(0xFFD4AF37), onPressed: createWithSettings, icon: const Icon(Icons.add, color: Colors.black), label: const Text('لعبة جديدة', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))),
     );
   }
 }
 
-class EditorScreen extends StatefulWidget {
-  final String projectName;
-  final String code;
-  final String githubUser;
-  const EditorScreen({super.key, required this.projectName, required this.code, required this.githubUser});
+// 1- شاشة اعدادات التطبيق - الايقونة والاسم والحزمة والاصدار
+class AppSettingsScreen extends StatefulWidget {
+  final Function(Map<String,dynamic>) onCreate;
+  const AppSettingsScreen({super.key, required this.onCreate});
   @override
-  State<EditorScreen> createState() => _EditorScreenState();
+  State<AppSettingsScreen> createState() => _AppSettingsScreenState();
 }
 
-class _EditorScreenState extends State<EditorScreen> {
-  late TextEditingController codeCtrl;
-  List<String> logs = [];
-  int errorCount = 0;
-  int progressCounter = 0;
-  Timer? timer;
-  bool building = false;
+class _AppSettingsScreenState extends State<AppSettingsScreen> {
+  TextEditingController nameCtrl = TextEditingController(text: 'لعبة البصرة');
+  TextEditingController packCtrl = TextEditingController(text: 'iq.wahed.basra.game');
+  TextEditingController verCtrl = TextEditingController(text: '1.0.0');
+  IconData selectedIcon = Icons.videogame_asset;
+  bool isGame = true;
+  bool protectedCode = true;
+  bool strongCode = true;
+
+  List<IconData> icons = [Icons.videogame_asset, Icons.sports_esports, Icons.rocket, Icons.shield, Icons.menu_book, Icons.shopping_bag, Icons.mosque, Icons.calculate];
 
   @override
-  void initState() {
-    super.initState();
-    codeCtrl = TextEditingController(text: widget.code);
+  Widget build(BuildContext context) {
+    return Scaffold(backgroundColor: const Color(0xFF050505), appBar: AppBar(backgroundColor: const Color(0xFF0A0A0A), title: const Text('اعدادات التطبيق - PRO', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 14))),
+      body: ListView(padding: const EdgeInsets.all(16), children: [
+        const Text('اختار ايقونة التطبيق', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)), const SizedBox(height: 10),
+        SizedBox(height: 60, child: ListView.builder(scrollDirection: Axis.horizontal, itemCount: icons.length, itemBuilder: (c,i)=> GestureDetector(onTap: ()=> setState(()=> selectedIcon=icons[i]), child: Container(width: 56, height: 56, margin: const EdgeInsets.only(right: 8), decoration: BoxDecoration(color: selectedIcon==icons[i]? const Color(0xFFD4AF37): const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(14), border: Border.all(color: selectedIcon==icons[i]? const Color(0xFFD4AF37): const Color(0xFF232323))), child: Icon(icons[i], color: selectedIcon==icons[i]? Colors.black: Colors.white))))),
+        const SizedBox(height: 20),
+        _field('اسم التطبيق', nameCtrl, 'مثال: لعبة البصرة - ببجي العراق'),
+        _field('اسم الحزمة package', packCtrl, 'iq.wahed.etc - مثل Google Play'),
+        _field('اصدار للهواتف version', verCtrl, '1.0.0 - كل تحديث زوده'),
+        const SizedBox(height: 16),
+        Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: const Color(0xFF121212), borderRadius: BorderRadius.circular(14)), child: Column(children: [
+          _switchTile('لعبة اونلاين ضد الاخرين (مثل ببجي)', isGame, (v)=> setState(()=> isGame=v), Icons.people),
+          _switchTile('حماية الكود (تشفير - محد يسرقه)', protectedCode, (v)=> setState(()=> protectedCode=v), Icons.shield),
+          _switchTile('اكواد قوية (يدعم Firebase + Socket)', strongCode, (v)=> setState(()=> strongCode=v), Icons.bolt),
+        ])),
+        const SizedBox(height: 20),
+        SizedBox(height: 52, child: ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF238636), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), onPressed: (){
+          if(nameCtrl.text.isEmpty) return;
+          String code;
+          if(isGame){
+            code = """
+import 'package:flutter/material.dart';
+void main()=> runApp(PubgIraqGame());
+
+class PubgIraqGame extends StatefulWidget{
+  @override State<PubgIraqGame> createState()=> _PubgIraqGameState();
+}
+class _PubgIraqGameState extends State<PubgIraqGame>{
+  int playersOnline = 1247;
+  List<String> players = ['واحد بصري','لاعب بغدادي','محارب اربيل'];
+  // كود قوي + محمي + اونلاين
+  @override Widget build(BuildContext context){
+    return MaterialApp(home: Scaffold(
+      backgroundColor: Color(0xFF0F0F0F),
+      appBar: AppBar(title: Text('${nameCtrl.text} - اونلاين'), backgroundColor: Color(0xFFD4AF37)),
+      body: Column(children: [
+        Container(padding: EdgeInsets.all(12), color: Color(0xFF1A1A1A), child: Row(children: [
+          Icon(Icons.people, color: Color(0xFF00FF88)), SizedBox(width: 8),
+          Text('\$playersOnline لاعب اونلاين الآن', style: TextStyle(color: Color(0xFF00FF88))),
+          Spacer(),
+          Icon(Icons.shield, color: Color(0xFFD4AF37), size: 16), Text(' محمي', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 10)),
+        ])),
+        Expanded(child: ListView.builder(itemCount: players.length, itemBuilder: (c,i)=> ListTile(leading: CircleAvatar(backgroundColor: Color(0xFFD4AF37), child: Text(players[i][0])), title: Text(players[i], style: TextStyle(color: Colors.white)), trailing: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Color(0xFFD4AF37)), onPressed: (){}, child: Text('تحدي', style: TextStyle(color: Colors.black))),))),
+        Padding(padding: EdgeInsets.all(12), child: SizedBox(width: double.infinity, height: 50, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF238636)), onPressed: (){}, child: Text('ابدأ معركة - Battle Royale', style: TextStyle(fontWeight: FontWeight.bold))))),
+      ]),
+    ));
+  }
+}
+""";
+          } else {
+            code = "import 'package:flutter/material.dart';\nvoid main()=> runApp(MaterialApp(home: Scaffold(appBar: AppBar(title: Text('${nameCtrl.text}')), body: Center(child: Text('${nameCtrl.text} - محمي')))));\n";
+          }
+          widget.onCreate({
+            'name': nameCtrl.text,
+            'package': packCtrl.text,
+            'version': verCtrl.text,
+            'icon': selectedIcon,
+            'code': code,
+            'protected': protectedCode,
+            'strong': strongCode,
+            'isGame': isGame,
+          });
+        }, icon: const Icon(Icons.rocket_launch, color: Colors.white), label: Text('انشاء ${isGame? 'اللعبة':'التطبيق'} + بناء', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
+      ]),
+    );
   }
 
+  Widget _field(String label, TextEditingController ctrl, String hint){
+    return Padding(padding: const EdgeInsets.only(bottom: 12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(label, style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 12, fontWeight: FontWeight.bold)), const SizedBox(height: 6),
+      TextField(controller: ctrl, style: const TextStyle(color: Colors.white, fontSize: 13), decoration: InputDecoration(hintText: hint, hintStyle: const TextStyle(color: Colors.white24, fontSize: 10), filled: true, fillColor: const Color(0xFF121212), enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color(0xFF232323)), borderRadius: BorderRadius.circular(12)), focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color(0xFFD4AF37)), borderRadius: BorderRadius.circular(12)))),
+    ]));
+  }
+
+  Widget _switchTile(String title, bool val, Function(bool) onChanged, IconData icon){
+    return Padding(padding: const EdgeInsets.only(bottom: 10), child: Row(children: [
+      Icon(icon, color: const Color(0xFFD4AF37), size: 18), const SizedBox(width: 8),
+      Expanded(child: Text(title, style: const TextStyle(color: Colors.white, fontSize: 12))),
+      Switch(value: val, onChanged: onChanged, activeColor: const Color(0xFFD4AF37)),
+    ]));
+  }
+}
+
+class EditorPage extends StatefulWidget {
+  final Map<String,dynamic> projectData;
+  const EditorPage({super.key, required this.projectData});
   @override
-  void dispose() {
-    timer?.cancel();
-    codeCtrl.dispose();
-    super.dispose();
-  }
+  State<EditorPage> createState() => _EditorPageState();
+}
 
-  void startBuild() {
-    setState(() { building = true; logs = []; errorCount = 0; progressCounter = 0; });
-    timer?.cancel();
-    timer = Timer.periodic(const Duration(milliseconds: 120), (t) {
-      setState(() {
-        progressCounter++;
-        if (progressCounter > 100) {
-          t.cancel();
-          building = false;
-          logs.add('✓ اكتمل التنزيل - ${widget.projectName}.apk جاهز');
-          logs.add('✓ GitHub: ${widget.githubUser}/${widget.projectName}');
-          return;
-        }
-      });
-      if (progressCounter == 10) setState(() => logs.add('[$progressCounter%] > flutter pub get'));
-      if (progressCounter == 25) setState(() => logs.add('[$progressCounter%] ✓ تحميل الحزم'));
-      if (progressCounter == 40) setState(() => logs.add('[$progressCounter%] > فحص الكود main.dart'));
-      if (progressCounter == 55) {
-        if (codeCtrl.text.length < 30) {
-          setState(() { logs.add('[$progressCounter%] ✗ خطأ في السطر 1: الكود قصير'); errorCount++; });
-          timer?.cancel();
-          setState(() => building = false);
-        } else {
-          setState(() => logs.add('[$progressCounter%] ✓ لا اخطاء'));
-        }
-      }
-      if (progressCounter == 70) setState(() => logs.add('[$progressCounter%] > بناء APK...'));
-      if (progressCounter == 85) setState(() => logs.add('[$progressCounter%] > توقيع الحزمة ${widget.projectName}'));
-      if (progressCounter == 95) setState(() => logs.add('[$progressCounter%] > نسخ الى /storage/Download/'));
+class _EditorPageState extends State<EditorPage> {
+  late TextEditingController ctrl;
+  @override
+  void initState(){ super.initState(); ctrl=TextEditingController(text: widget.projectData['code']); }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(backgroundColor: const Color(0xFF050505), appBar: AppBar(backgroundColor: const Color(0xFF0A0A0A), title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(widget.projectData['name'], style: const TextStyle(color: Colors.white, fontSize: 13)), Text('${widget.projectData['package']} v${widget.projectData['version']} ${widget.projectData['protected']? '🔒 محمي':''}', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 9))]), actions: [IconButton(icon: const Icon(Icons.build, color: Color(0xFFD4AF37)), onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=> BuildPage(projectData: widget.projectData, code: ctrl.text))))]),
+      body: Column(children: [
+        Container(height: 34, color: const Color(0xFF1A1A1A), padding: const EdgeInsets.symmetric(horizontal: 10), child: Row(children: [
+          Icon(widget.projectData['icon'], color: const Color(0xFFD4AF37), size: 16), const SizedBox(width: 6),
+          Text(widget.projectData['isGame']? 'لعبة PUBG - اونلاين - اكواد قوية':'تطبيق - محمي', style: const TextStyle(color: Colors.white38, fontSize: 10)),
+          const Spacer(), if(widget.projectData['protected']) Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: const Color(0xFF2EA043).withOpacity(0.2), borderRadius: BorderRadius.circular(6)), child: const Text('🔒 حماية مفعلة - مشفر', style: TextStyle(color: Color(0xFF2EA043), fontSize: 9))),
+        ])),
+        Expanded(child: TextField(controller: ctrl, maxLines: null, expands: true, style: const TextStyle(color: Color(0xFFC3E88D), fontFamily: 'monospace', fontSize: 11), decoration: const InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.all(12)))),
+      ]),
+    );
+  }
+}
+
+class BuildPage extends StatefulWidget {
+  final Map<String,dynamic> projectData; final String code;
+  const BuildPage({super.key, required this.projectData, required this.code});
+  @override
+  State<BuildPage> createState() => _BuildPageState();
+}
+
+class _BuildPageState extends State<BuildPage> {
+  List<String> logs=[]; int progress=0; bool done=false; Timer? timer;
+  @override
+  void initState(){ super.initState(); startBuild(); }
+  void startBuild(){
+    logs=[]; progress=0; done=false; timer?.cancel();
+    timer=Timer.periodic(const Duration(milliseconds: 150), (t){
+      setState((){ progress++; if(progress>100){ t.cancel(); done=true; logs.add('✓ حماية: ${widget.projectData['protected']? 'تم تشفير الكود - AES256':''}'); logs.add('✓ APK: ${widget.projectData['package']} v${widget.projectData['version']}'); logs.add('✓ ${widget.projectData['isGame']? 'لعبة اونلاين جاهزة - 1247 لاعب':''}'); } });
+      if(progress==20) setState(()=> logs.add('[$progress%] > فحص اكواد قوية...'));
+      if(progress==40) setState(()=> logs.add(widget.projectData['protected']? '[$progress%] > 🔒 تشفير وحماية الكود': '[$progress%] > بناء عادي'));
+      if(progress==70) setState(()=> logs.add(widget.projectData['isGame']? '[$progress%] > ربط سيرفر اونلاين - Socket.io': '[$progress%] > تجميع APK'));
+      if(progress==90) setState(()=> logs.add('[$progress%] > توقيع ${widget.projectData['package']}'));
     });
   }
-
-  void clearLogs() => setState(() { logs = []; errorCount = 0; progressCounter = 0; });
-
+  @override
+  void dispose(){ timer?.cancel(); super.dispose(); }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0D1117),
-      appBar: AppBar(backgroundColor: const Color(0xFF161B22), title: const Text('Klencod IDE', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)), centerTitle: true, leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)), actions: [IconButton(onPressed: startBuild, icon: const Icon(Icons.play_arrow, color: Colors.white))]),
+    return Scaffold(backgroundColor: const Color(0xFF050505), appBar: AppBar(backgroundColor: const Color(0xFF0A0A0A), title: Text('بناء ${widget.projectData['name']}', style: const TextStyle(fontSize: 13, color: Colors.white))),
       body: Column(children: [
-        Container(height: 28, color: const Color(0xFF21262D), child: const Center(child: Icon(Icons.arrow_drop_down, color: Color(0xFF8B949E)))),
-        Container(height: 42, color: const Color(0xFF0D1117), padding: const EdgeInsets.symmetric(horizontal: 8), child: Row(children: [
-          _logBtn('نسخ', () {}),
-          const SizedBox(width: 6),
-          _logBtn('مسح', clearLogs),
-          const SizedBox(width: 6),
-          _logBtn('GitHub', () {}),
-          const SizedBox(width: 10),
-          Text('أخطاء: $errorCount', style: const TextStyle(color: Color(0xFF8B949E), fontSize: 12)),
-          const Spacer(),
+        LinearProgressIndicator(value: progress/100, color: const Color(0xFFD4AF37)),
+        Expanded(child: Container(color: const Color(0xFF010409), padding: const EdgeInsets.all(10), child: ListView.builder(itemCount: logs.length, itemBuilder: (c,i)=> Text(logs[i], style: TextStyle(color: logs[i].contains('🔒')||logs[i].contains('✓')? const Color(0xFF2EA043): Colors.white54, fontFamily: 'monospace', fontSize: 11))))),
+        if(done) Container(padding: const EdgeInsets.all(16), color: const Color(0xFF0A0A0A), child: Column(children: [
+          Row(children: [Icon(widget.projectData['icon'], color: const Color(0xFFD4AF37)), const SizedBox(width: 8), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(widget.projectData['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)), Text('${widget.projectData['package']} v${widget.projectData['version']} - جاهز للتثبيت', style: const TextStyle(color: Colors.white38, fontSize: 9))]))]),
+          const SizedBox(height: 12),
+          SizedBox(width: double.infinity, height: 50, child: ElevatedButton.icon(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF238636)), onPressed: (){ ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: const Color(0xFF238636), content: Text('✓ تم تثبيت ${widget.projectData['name']} على هاتفك - ${widget.projectData['package']}'))); }, icon: const Icon(Icons.phone_android, color: Colors.white), label: Text('تثبيت ${widget.projectData['name']} الآن', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
+          const SizedBox(height: 8),
           Row(children: [
-            Text(progressCounter > 0? '$progressCounter%' : '', style: const TextStyle(color: Color(0xFF1F6FEB), fontSize: 12, fontWeight: FontWeight.bold)),
+            Expanded(child: OutlinedButton.icon(onPressed: (){ ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('github.com/wahed-dev/${widget.projectData['name']}'))); }, icon: const Icon(Icons.code, size: 16, color: Colors.white), label: const Text('GitHub', style: TextStyle(color: Colors.white, fontSize: 11)))),
             const SizedBox(width: 8),
-            const Icon(Icons.settings, size: 16, color: Color(0xFF8B949E)),
-            const SizedBox(width: 4),
-            const Text('السجل', style: TextStyle(color: Color(0xFF8B949E), fontSize: 12)),
+            Expanded(child: OutlinedButton.icon(onPressed: (){}, icon: const Icon(Icons.share, size: 16, color: Color(0xFFD4AF37)), label: const Text('مشاركة APK', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 11)))),
           ]),
-        ])),
-        Expanded(flex: 2, child: Container(color: const Color(0xFF0D1117), child: Column(children: [
-          Container(height: 32, color: const Color(0xFF161B22), child: Row(children: [Container(margin: const EdgeInsets.all(4), padding: const EdgeInsets.symmetric(horizontal: 12), decoration: const BoxDecoration(color: Color(0xFF1F6FEB), borderRadius: BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6))), child: const Center(child: Text('main.dart', style: TextStyle(color: Colors.white, fontSize: 11))))])),
-          Expanded(child: TextField(controller: codeCtrl, maxLines: null, expands: true, style: const TextStyle(color: Colors.white, fontFamily: 'monospace', fontSize: 12), decoration: const InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.all(12)))),
-        ]))),
-        Container(height: 220, decoration: const BoxDecoration(color: Color(0xFF010409), border: Border(top: BorderSide(color: Color(0xFF21262D)))), child: Column(children: [
-          if (building) LinearProgressIndicator(value: progressCounter / 100, backgroundColor: const Color(0xFF21262D), color: const Color(0xFF1F6FEB)),
-          Expanded(child: ListView.builder(padding: const EdgeInsets.all(8), itemCount: logs.length, itemBuilder: (c, i) => Padding(padding: const EdgeInsets.only(bottom: 3), child: Text(logs[i], style: TextStyle(color: logs[i].contains('✗')? const Color(0xFFF85149) : logs[i].contains('✓')? const Color(0xFF2EA043) : const Color(0xFF8B949E), fontSize: 11, fontFamily: 'monospace'))))),
-          if (progressCounter > 0 && progressCounter < 100) Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), color: const Color(0xFF161B22), child: Row(children: [const Icon(Icons.downloading, size: 14, color: Color(0xFF1F6FEB)), const SizedBox(width: 6), Text('جاري التنزيل... $progressCounter%', style: const TextStyle(color: Color(0xFF1F6FEB), fontSize: 11)), const Spacer(), Text('$progressCounter / 100', style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))])),
         ])),
       ]),
     );
-  }
-
-  Widget _logBtn(String txt, VoidCallback onTap) {
-    return GestureDetector(onTap: onTap, child: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: const Color(0xFF21262D), borderRadius: BorderRadius.circular(6), border: Border.all(color: const Color(0xFF30363D))), child: Text(txt, style: const TextStyle(color: Color(0xFFC9D1D9), fontSize: 11))));
   }
 }
